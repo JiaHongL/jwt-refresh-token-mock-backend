@@ -5,7 +5,11 @@ import { jwtConstants, jwtRefreshConstants } from './strategies/constants';
 
 @Injectable()
 export class AuthService {
-  tokenExpiresIn = '6000s';
+
+  /** token 過期時間 */
+  tokenExpiresIn = '3s';
+
+  /** refresh token 過期時間 */
   refreshTokenExpiresIn = '7d';
 
   constructor(
