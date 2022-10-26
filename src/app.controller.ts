@@ -11,10 +11,35 @@ import {
   Param,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { AuthService } from './auth/auth.service';
 import { UsersService } from './users/users.service';
 
+import { ResultOfErrorDto } from './_models/result/result-of-error.dto';
+import { ResultOfStringDto } from './_models/result/result-of-string.dto';
+
+import { LoginBodyDto } from './_models/body/login-body.dto';
+
+import { RefreshBodyDto } from './_models/body/refresh-body.dto';
+import { ResultOfLoginSuccessfullyDto } from './_models/result/result-of-login-successfully.dto';
+import { ResultOfRefreshedSuccessfullyDto } from './_models/result/result-of-refreshed-successfully.dto';
+
+import { ResultOfProfileDto } from './_models/result/result-of-profile.dto';
+import { ResultOfPostListDto } from './_models/result/result-of-post-list.dto';
+import { ResultOfPostDetailDto } from './_models/result/result-of-post-detail.dto';
+import { ResultOfCategoryListDto } from './_models/result/result-of-category-list.dto';
+import { ResultOfCommentListDetailDto } from './_models/result/result-of-comment-list.dto';
+
+@ApiBearerAuth()
 @Controller()
 export class AppController {
   constructor(
@@ -22,65 +47,138 @@ export class AppController {
     private readonly usersService: UsersService,
   ) {}
 
+  @ApiTags('auth')
+  @ApiOperation({ summary: '登入帳號 (獲取 accessToken 與 refreshToken)' })
+  @ApiResponse({
+    status: 201,
+    description: '登入成功',
+    type: ResultOfLoginSuccessfullyDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: '登入失敗',
+    type: ResultOfErrorDto,
+  })
   @UseGuards(AuthGuard('local'))
   @Post('auth/login')
-  async login(@Body() params: { username: string; password: string }) {
-    return this.authService.login(params);
+  async login(@Body() loginBodyDto: LoginBodyDto) {
+    return this.authService.login(loginBodyDto);
   }
 
+  @ApiTags('auth')
+  @ApiOperation({
+    summary: 'refresh Token (獲取新的 accessToken 與 refreshToken)',
+  })
+  @ApiBody({
+    type: RefreshBodyDto,
+  })
+  @ApiResponse({
+    status: 201,
+    description: '刷新成功',
+    type: ResultOfRefreshedSuccessfullyDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: '刷新失敗',
+    type: ResultOfErrorDto,
+  })
+  @ApiResponse({
+    status: 403,
+    description: '禁止使用 (測試帳號已被刪除)',
+    type: ResultOfErrorDto,
+  })
   @UseGuards(AuthGuard('refreshToken'))
   @Post('auth/refreshToken')
   async refreshTokens(@Request() req) {
     return this.authService.refreshToken(req.user);
   }
 
+  @ApiTags('user')
+  @ApiOperation({ summary: '註冊帳號 (將測試帳號加回)' })
+  @ApiResponse({
+    status: 201,
+    description: '註冊帳號成功 (將測試帳號加回)',
+    type: ResultOfStringDto,
+  })
   @Post('user/register')
-  register() {
+  register(): ResultOfStringDto {
     this.usersService.addTestUser();
-    return {
+    return new ResultOfStringDto({
       success: true,
       message: '註冊成功',
       data: null,
-    };
+    });
   }
 
+  @ApiTags('user')
+  @ApiOperation({ summary: '刪除帳號 (將測試帳號移除)' })
+  @ApiResponse({
+    status: 201,
+    description: '刪除帳號成功 (將測試帳號移除)',
+    type: ResultOfStringDto,
+  })
   @Post('user/delete')
-  delete() {
+  delete(): ResultOfStringDto {
     this.usersService.removeTestUser();
-    return {
+    return new ResultOfStringDto({
       success: true,
       message: '刪除成功',
       data: null,
-    };
+    });
   }
 
+  @ApiTags('user')
+  @ApiOperation({ summary: '獲取個人資料' })
+  @ApiResponse({
+    status: 200,
+    description: '獲取資料成功',
+    type: ResultOfProfileDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: '獲取資料失敗',
+    type: ResultOfErrorDto,
+  })
+  @ApiResponse({
+    status: 403,
+    description: '禁止使用 (測試帳號已被刪除)',
+    type: ResultOfErrorDto,
+  })
   @UseGuards(AuthGuard('accessToken'))
   @Get('user/profile')
   getProfile(@Request() req) {
-    return {
+    return new ResultOfProfileDto({
       success: true,
       message: '',
       data: {
+        id: 999,
         ...req.user,
         avatar: 'https://loremflickr.com/80/80/man?lock=56',
       },
-    };
+    });
   }
 
-  @UseGuards(AuthGuard('accessToken'))
-  @Get('categories')
-  getCategories() {
-    return {
-      success: true,
-      message: '',
-      data: fakeCategories,
-    };
-  }
-
+  @ApiTags('posts')
+  @ApiOperation({ summary: '獲取文章列表' })
+  @ApiResponse({
+    status: 200,
+    description: '獲取資料成功',
+    type: ResultOfPostListDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: '獲取資料失敗',
+    type: ResultOfErrorDto,
+  })
+  @ApiResponse({
+    status: 403,
+    description: '禁止使用 (測試帳號已被刪除)',
+    type: ResultOfErrorDto,
+  })
   @UseGuards(AuthGuard('accessToken'))
   @Get('posts')
   getPosts() {
-    return {
+    return new ResultOfPostListDto({
       success: true,
       message: '',
       data: fakePosts.map((posts) => {
@@ -94,23 +192,86 @@ export class AppController {
         };
         return newPosts;
       }),
-    };
+    });
   }
 
+  @ApiTags('posts')
+  @ApiOperation({ summary: '獲取文章詳細資料' })
+  @ApiParam({ name: 'id' })
+  @ApiResponse({
+    status: 200,
+    description: '獲取資料成功',
+    type: ResultOfPostDetailDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: '獲取資料失敗',
+    type: ResultOfErrorDto,
+  })
+  @ApiResponse({
+    status: 403,
+    description: '禁止使用 (測試帳號已被刪除)',
+    type: ResultOfErrorDto,
+  })
   @UseGuards(AuthGuard('accessToken'))
   @Get('posts/:id')
   getPostDetail(@Param('id') id) {
-    return {
+    return new ResultOfPostDetailDto({
       success: true,
       message: '',
       data: fakePosts.find((posts) => posts.id == id) || null,
-    };
+    });
   }
 
+  @ApiTags('other')
+  @ApiOperation({ summary: '獲取分類' })
+  @ApiResponse({
+    status: 200,
+    description: '獲取資料成功',
+    type: ResultOfCategoryListDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: '獲取資料失敗',
+    type: ResultOfErrorDto,
+  })
+  @ApiResponse({
+    status: 403,
+    description: '禁止使用 (測試帳號已被刪除)',
+    type: ResultOfErrorDto,
+  })
+  @UseGuards(AuthGuard('accessToken'))
+  @Get('categories')
+  getCategories() {
+    return new ResultOfCategoryListDto({
+      success: true,
+      message: '',
+      data: fakeCategories,
+    });
+  }
+
+  @ApiTags('other')
+  @ApiOperation({ summary: '獲取文章的留言' })
+  @ApiResponse({
+    status: 200,
+    description: '獲取資料成功',
+    type: ResultOfCommentListDetailDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: '獲取資料失敗',
+    type: ResultOfErrorDto,
+  })
+  @ApiResponse({
+    status: 403,
+    description: '禁止使用 (測試帳號已被刪除)',
+    type: ResultOfErrorDto,
+  })
+  @ApiQuery({ name: 'postId' })
   @UseGuards(AuthGuard('accessToken'))
   @Get('comments')
   getComments(@Query('postId') postId) {
-
+    console.log('postId', postId);
     if (!postId) {
       throw new HttpException(
         'QueryParams 缺少 postId',
@@ -124,7 +285,6 @@ export class AppController {
       data: fakeComments.filter((comment) => comment.postId == postId) || [],
     };
   }
-
 }
 
 const fakePostsBody = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit pretium dolor, vel pulvinar eros facilisis non. Mauris lorem orci, porta fringilla pulvinar eget, hendrerit eget eros. Aenean tempus, metus et euismod blandit, nulla leo tincidunt ipsum, nec euismod metus magna sed erat. Duis quis mauris mollis, hendrerit libero vel, venenatis metus. Nulla varius lectus quis lorem dignissim, eu ornare nisl ultrices. Nulla et nibh vel erat convallis imperdiet non at odio. Integer et urna at nunc dignissim lobortis.\n  
@@ -141,7 +301,6 @@ const fakePosts = [
     body:
       'quia et suscipit suscipit recusandae consequuntur expedita et cum reprehenderit molestiae ut ut quas totam nostrum rerum est autem sunt rem eveniet architecto' +
       fakePostsBody,
-    userId: 9,
     tags: ['ClassA', 'ClassB'],
     cover: 'https://loremflickr.com/536/354/dog?lock=4',
     user: {
@@ -158,7 +317,6 @@ const fakePosts = [
     body:
       'suscipit nam nisi quo aperiam aut asperiores eos fugit maiores voluptatibus quia voluptatem quis ullam qui in alias quia est consequatur magni mollitia accusamus ea nisi voluptate dicta' +
       fakePostsBody,
-    userId: 13,
     tags: ['ClassA', 'ClassC'],
     cover: 'https://loremflickr.com/536/354/tree?lock=47',
     reactions: 2,
@@ -175,7 +333,6 @@ const fakePosts = [
     body:
       'aut dicta possimus sint mollitia voluptas commodi quo doloremque iste corrupti reiciendis voluptatem eius rerum sit cumque quod eligendi laborum minima perferendis recusandae assumenda consectetur porro architecto ipsum ipsam' +
       fakePostsBody,
-    userId: 32,
     tags: ['ClassA', 'ClassD'],
     cover: 'https://loremflickr.com/536/354/apple?lock=78',
     reactions: 5,
@@ -192,7 +349,6 @@ const fakePosts = [
     body:
       'quia et suscipit suscipit recusandae consequuntur expedita et cum reprehenderit molestiae ut ut quas totam nostrum rerum est autem sunt rem eveniet architecto' +
       fakePostsBody,
-    userId: 9,
     tags: ['ClassA', 'ClassB'],
     cover: 'https://loremflickr.com/536/354/cat?lock=4',
     reactions: 2,
@@ -209,7 +365,6 @@ const fakePosts = [
     body:
       'suscipit nam nisi quo aperiam aut asperiores eos fugit maiores voluptatibus quia voluptatem quis ullam qui in alias quia est consequatur magni mollitia accusamus ea nisi voluptate dicta' +
       fakePostsBody,
-    userId: 13,
     tags: ['ClassA', 'ClassC'],
     cover: 'https://loremflickr.com/536/354/bird?lock=100',
     reactions: 2,
@@ -227,7 +382,6 @@ const fakePosts = [
     body:
       'corrupti aut dicta possimus sint mollitia voluptas commodi quo doloremque iste corrupti reiciendis voluptatem eius rerum sit cumque quod eligendi laborum minima perferendis recusandae assumenda consectetur porro architecto ipsum ipsam' +
       fakePostsBody,
-    userId: 32,
     tags: ['ClassA', 'ClassD'],
     cover: 'https://loremflickr.com/536/354/animal?lock=20',
     reactions: 5,
@@ -244,7 +398,6 @@ const fakePosts = [
     body:
       'commodi aut dicta possimus sint mollitia voluptas commodi quo doloremque iste corrupti reiciendis voluptatem eius rerum sit cumque quod eligendi laborum minima perferendis recusandae assumenda consectetur porro architecto ipsum ipsam' +
       fakePostsBody,
-    userId: 32,
     tags: ['ClassA', 'ClassD'],
     cover: 'https://loremflickr.com/536/354/rock?lock=1',
     reactions: 5,
@@ -261,7 +414,6 @@ const fakePosts = [
     body:
       'reprehenderit quia et suscipit suscipit recusandae consequuntur expedita et cum reprehenderit molestiae ut ut quas totam nostrum rerum est autem sunt rem eveniet architecto' +
       fakePostsBody,
-    userId: 9,
     tags: ['ClassA', 'ClassB'],
     cover: 'https://loremflickr.com/536/354/sheep?lock=18',
     reactions: 2,

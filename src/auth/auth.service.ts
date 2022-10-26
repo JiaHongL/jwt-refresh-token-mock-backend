@@ -1,13 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+
+import { UsersService } from '../users/users.service';
+
 import { jwtConstants, jwtRefreshConstants } from './strategies/constants';
+
+import { ResultOfLoginSuccessfullyDto } from 'src/_models/result/result-of-login-successfully.dto';
 
 @Injectable()
 export class AuthService {
-
   /** token 過期時間 */
-  tokenExpiresIn = '3s';
+  tokenExpiresIn = '5s';
 
   /** refresh token 過期時間 */
   refreshTokenExpiresIn = '7d';
@@ -26,15 +29,19 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any) {
+  async login(user: any): Promise<ResultOfLoginSuccessfullyDto> {
     const payload = { username: user.username, sub: user.userId };
 
     const [accessToken, refreshToken] = await this.createTokens(payload);
 
-    return {
-      accessToken,
-      refreshToken,
-    };
+    const result = new ResultOfLoginSuccessfullyDto({
+      data: {
+        accessToken,
+        refreshToken,
+      },
+    });
+
+    return result;
   }
 
   async refreshToken(user) {
@@ -42,10 +49,14 @@ export class AuthService {
 
     const [accessToken, refreshToken] = await this.createTokens(payload);
 
-    return {
-      accessToken,
-      refreshToken,
-    };
+    const result = new ResultOfLoginSuccessfullyDto({
+      data: {
+        accessToken,
+        refreshToken,
+      },
+    });
+
+    return result;
   }
 
   createTokens(payload): any {
