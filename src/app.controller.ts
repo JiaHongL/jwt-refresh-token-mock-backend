@@ -28,18 +28,19 @@ import { ResultOfErrorDto } from './_models/result/result-of-error.dto';
 import { ResultOfStringDto } from './_models/result/result-of-string.dto';
 
 import { LoginBodyDto } from './_models/body/login-body.dto';
-
 import { RefreshBodyDto } from './_models/body/refresh-body.dto';
+
 import { ResultOfLoginSuccessfullyDto } from './_models/result/result-of-login-successfully.dto';
 import { ResultOfRefreshedSuccessfullyDto } from './_models/result/result-of-refreshed-successfully.dto';
 
 import { ResultOfProfileDto } from './_models/result/result-of-profile.dto';
+
 import { ResultOfPostListDto } from './_models/result/result-of-post-list.dto';
 import { ResultOfPostDetailDto } from './_models/result/result-of-post-detail.dto';
-import { ResultOfCategoryListDto } from './_models/result/result-of-category-list.dto';
-import { ResultOfCommentListDetailDto } from './_models/result/result-of-comment-list.dto';
 
-@ApiBearerAuth()
+import { ResultOfCommentListDetailDto } from './_models/result/result-of-comment-list.dto';
+import { ResultOfCategoryListDto } from './_models/result/result-of-category-list.dto';
+
 @Controller()
 export class AppController {
   constructor(
@@ -49,6 +50,10 @@ export class AppController {
 
   @ApiTags('auth')
   @ApiOperation({ summary: '登入帳號 (獲取 accessToken 與 refreshToken)' })
+  @ApiBody({
+    type: LoginBodyDto,
+    description: '僅有 { username : joe, password : test } 這組測試帳號',
+  })
   @ApiResponse({
     status: 201,
     description: '登入成功',
@@ -67,19 +72,20 @@ export class AppController {
 
   @ApiTags('auth')
   @ApiOperation({
-    summary: 'refresh Token (獲取新的 accessToken 與 refreshToken)',
+    summary: '取得新的 Tokens',
   })
   @ApiBody({
     type: RefreshBodyDto,
+    description: '請帶登入取得的 refreshToken',
   })
   @ApiResponse({
     status: 201,
-    description: '刷新成功',
+    description: '獲取資料成功',
     type: ResultOfRefreshedSuccessfullyDto,
   })
   @ApiResponse({
     status: 401,
-    description: '刷新失敗',
+    description: '獲取資料失敗',
     type: ResultOfErrorDto,
   })
   @ApiResponse({
@@ -129,6 +135,7 @@ export class AppController {
 
   @ApiTags('user')
   @ApiOperation({ summary: '獲取個人資料' })
+  @ApiBearerAuth()
   @ApiResponse({
     status: 200,
     description: '獲取資料成功',
@@ -151,7 +158,7 @@ export class AppController {
       success: true,
       message: '',
       data: {
-        id: 999,
+        id: 99,
         ...req.user,
         avatar: 'https://loremflickr.com/80/80/man?lock=56',
       },
@@ -160,6 +167,7 @@ export class AppController {
 
   @ApiTags('posts')
   @ApiOperation({ summary: '獲取文章列表' })
+  @ApiBearerAuth()
   @ApiResponse({
     status: 200,
     description: '獲取資料成功',
@@ -197,7 +205,8 @@ export class AppController {
 
   @ApiTags('posts')
   @ApiOperation({ summary: '獲取文章詳細資料' })
-  @ApiParam({ name: 'id' })
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', description: '從 獲取文章列表 API 取得 id' })
   @ApiResponse({
     status: 200,
     description: '獲取資料成功',
@@ -225,6 +234,7 @@ export class AppController {
 
   @ApiTags('other')
   @ApiOperation({ summary: '獲取分類' })
+  @ApiBearerAuth()
   @ApiResponse({
     status: 200,
     description: '獲取資料成功',
@@ -252,10 +262,16 @@ export class AppController {
 
   @ApiTags('other')
   @ApiOperation({ summary: '獲取文章的留言' })
+  @ApiBearerAuth()
   @ApiResponse({
     status: 200,
     description: '獲取資料成功',
     type: ResultOfCommentListDetailDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: '獲取資料失敗 (前端發送的請求有問題)',
+    type: ResultOfErrorDto,
   })
   @ApiResponse({
     status: 401,
@@ -267,16 +283,19 @@ export class AppController {
     description: '禁止使用 (測試帳號已被刪除)',
     type: ResultOfErrorDto,
   })
-  @ApiQuery({ name: 'postId' })
+  @ApiQuery({
+    name: 'postId',
+    description: '從 獲取文章詳細資料 API 取得 postId',
+  })
   @UseGuards(AuthGuard('accessToken'))
   @Get('comments')
   getComments(@Query('postId') postId) {
-    console.log('postId', postId);
     if (!postId) {
-      throw new HttpException(
-        'QueryParams 缺少 postId',
-        HttpStatus.BAD_REQUEST,
-      );
+      const response = new ResultOfErrorDto({
+        message: 'QueryParams 缺少 postId',
+      });
+
+      throw new HttpException(response, HttpStatus.BAD_REQUEST);
     }
 
     return {
