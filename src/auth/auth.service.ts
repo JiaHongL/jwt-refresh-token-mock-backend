@@ -9,8 +9,8 @@ import { ResultOfLoginSuccessfullyDto } from 'src/_models/result/result-of-login
 
 @Injectable()
 export class AuthService {
-  /** token 過期時間 */
-  tokenExpiresIn = '5s';
+  /** access token 過期時間 */
+  accessTokenExpiresIn = '30s';
 
   /** refresh token 過期時間 */
   refreshTokenExpiresIn = '7d';
@@ -63,7 +63,7 @@ export class AuthService {
     return Promise.all([
       this.jwtService.signAsync(payload, {
         secret: jwtConstants.secret,
-        expiresIn: this.tokenExpiresIn,
+        expiresIn: this.accessTokenExpiresIn,
       }),
       this.jwtService.signAsync(payload, {
         secret: jwtRefreshConstants.secret,

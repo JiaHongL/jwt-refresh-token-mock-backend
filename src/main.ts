@@ -17,7 +17,7 @@ function setupSwagger(app: INestApplication) {
     .setTitle('RefreshTokenPractice')
     .setDescription(
       `這是一組用來練習前端 refresh token 的 APIs。<br> 
-       > 預設 accessToken 5秒過期，除了 登入帳號/取得新的 Tokens/註冊帳號/刪除帳號 沒有驗證 accessToken，其他 API 都可練習 401 或 403 的情境。<br>
+       > 預設 accessToken 30秒會過期，除了 登入帳號/取得新的 Tokens/註冊帳號/刪除帳號 沒有驗證 accessToken，其他 API 都可練習 401 或 403 的情境。<br>
        PS : 此 Swagger 的 token 前面不需加上 bearer (已幫加)，但撰寫前端程式碼請記得加上 bearer :")
       `,
     )
