@@ -44,13 +44,13 @@ $ npm run start:dev
 10. 如果想調整 accessToken 過期時間，可到 src/auth/auth.service.ts，調整上面有寫註解的變數即可([參數](https://github.com/vercel/ms))，如下圖調整為60秒過期。
 ![](https://i.imgur.com/VW9Fdt7.png)
 
-11. 若想測試 403，可以在重新登入，趁 accessToken 還未過期時，打刪除帳號API，然後再立即去打其他受保護的API，即可收到 403 error。
+11. 若想測試 403，可以再重新登入，趁 accessToken 還未過期時，打刪除帳號API，然後再立即去打其他受保護的API，即可收到 403 error。
 
 ![](https://i.imgur.com/PhtrLqm.png)
 
 ![](https://i.imgur.com/E5LszOf.png)
 
-> PS：401 與 403 的區別，401:沒有權限存取，403:拒絕任何存取，而這專案的 API 會先驗 token 是否有效，才會再驗是否可以存取。
+> PS：401 與 403 的區別，401 : 沒有權限存取，403 : 拒絕任何存取，而這專案的 API 會先驗 token 是否有效，才會再驗是否可以存取。
 
 
 ## 推薦文章與參考範例
