@@ -30,7 +30,9 @@ export class AuthService {
   }
 
   async login(user: any): Promise<ResultOfLoginSuccessfullyDto> {
-    const payload = { username: user.username, sub: user.userId };
+    const userInfo = await this.usersService.findOne(user.username);
+
+    const payload = { username: user.username, sub: userInfo.userId };
 
     const [accessToken, refreshToken] = await this.createTokens(payload);
 
@@ -45,7 +47,10 @@ export class AuthService {
   }
 
   async refreshToken(user) {
-    const payload = { username: user.username, sub: user.userId };
+
+    const userInfo = await this.usersService.findOne(user.username);
+
+    const payload = { username: user.username, sub: userInfo.userId };
 
     const [accessToken, refreshToken] = await this.createTokens(payload);
 
