@@ -58,7 +58,7 @@ $ npm run start:dev
 | 框架 | 推薦文章 | 相關範例/實作練習 |
 | -------- | -------- | -------- |
 | Angular     | [Angular 12 Refresh Token with Interceptor and JWT example](https://www.bezkoder.com/angular-12-refresh-token/)  | [JiaHongL/ng-refresh-token-demo](https://github.com/JiaHongL/ng-refresh-token-demo)     |
-| 等待有緣人 | 等待有緣人 | 等待有緣人 |
+| React + Redux Toolkit | [React.js + Redux Toolkit: Refresh Tokens Authentication](https://codevoweb.com/react-redux-toolkit-refresh-token-authentication/)| [JiaHongL/react-refresh-token-demo](https://github.com/JiaHongL/react-refresh-token-demo) |
 | 等待有緣人 | 等待有緣人 | 等待有緣人 |
 
 > 歡迎實作其他版本，可發 PR 或是 issue 都可:")
