@@ -2,6 +2,15 @@
 
 這是一個可以拿來練習前端 jwt refresh token 的後端專案。
 
+## 推薦文章與參考範例
+
+| 框架 | 推薦文章 | 相關範例/實作練習 | demo |
+| -------- | -------- | -------- | -------- |
+| Angular     | [Angular 12 Refresh Token with Interceptor and JWT example](https://www.bezkoder.com/angular-12-refresh-token/)  | [JiaHongL/ng-refresh-token-demo](https://github.com/JiaHongL/ng-refresh-token-demo)  | [Demo](https://jiahongl.github.io/ng-refresh-token-demo/#/login) |
+| React + Redux Toolkit | [React.js + Redux Toolkit: Refresh Tokens Authentication](https://codevoweb.com/react-redux-toolkit-refresh-token-authentication/)| [JiaHongL/react-refresh-token-demo](https://github.com/JiaHongL/react-refresh-token-demo) |  [Demo](https://jiahongl.github.io/react-refresh-token-demo/#/login) |
+| Vue | ChatGPT 範例 | [JiaHongL/vue-refresh-token-demo](https://github.com/JiaHongL/vue-refresh-token-demo) |  [Demo](https://jiahongl.github.io/vue-refresh-token-demo/#/login) |
+
+> 歡迎實作其他版本，可發 PR 或是 issue 都可:")
 
 ## 下載與啟動專案
 
@@ -51,17 +60,6 @@ $ npm run start:dev
 ![](https://i.imgur.com/E5LszOf.png)
 
 > PS：401 與 403 的區別，401 : 沒有權限存取，403 : 拒絕任何存取，而這專案的 API 會先驗 token 是否有效，才會再驗是否可以存取。
-
-
-## 推薦文章與參考範例
-
-| 框架 | 推薦文章 | 相關範例/實作練習 |
-| -------- | -------- | -------- |
-| Angular     | [Angular 12 Refresh Token with Interceptor and JWT example](https://www.bezkoder.com/angular-12-refresh-token/)  | [JiaHongL/ng-refresh-token-demo](https://github.com/JiaHongL/ng-refresh-token-demo)     |
-| React + Redux Toolkit | [React.js + Redux Toolkit: Refresh Tokens Authentication](https://codevoweb.com/react-redux-toolkit-refresh-token-authentication/)| [JiaHongL/react-refresh-token-demo](https://github.com/JiaHongL/react-refresh-token-demo) |
-| 等待有緣人 | 等待有緣人 | 等待有緣人 |
-
-> 歡迎實作其他版本，可發 PR 或是 issue 都可:")
 
 ## API 介紹（請容我都用截圖XD）
 
