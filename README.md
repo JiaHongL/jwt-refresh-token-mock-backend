@@ -38,7 +38,7 @@ $ npm run start:dev
 8. 另外要特別注意，前端實作時，要記得加上 Bearer ${token} (Bearer後有空格!!)。
 ![](https://i.imgur.com/zOt56tw.png)
 
-9. 如果手腳太慢或是超過30秒，則會收到 401 error，就是沒有權限存取的 API。
+9. 如果手腳太慢或是超過5秒，則會收到 401 error，就是沒有權限存取的 API。
 ![](https://i.imgur.com/Ppi8L0q.png)
 
 10. 如果想調整 accessToken 過期時間，可到 src/auth/auth.service.ts，調整上面有寫註解的變數即可([參數](https://github.com/vercel/ms))，如下圖調整為60秒過期。

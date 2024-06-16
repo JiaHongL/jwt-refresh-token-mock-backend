@@ -10,7 +10,7 @@ import { ResultOfLoginSuccessfullyDto } from 'src/_models/result/result-of-login
 @Injectable()
 export class AuthService {
   /** access token 過期時間 */
-  accessTokenExpiresIn = '2s';
+  accessTokenExpiresIn = '5s';
 
   /** refresh token 過期時間 */
   refreshTokenExpiresIn = '7d';
