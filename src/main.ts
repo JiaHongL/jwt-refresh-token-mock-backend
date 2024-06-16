@@ -5,7 +5,18 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
+  app.enableCors({
+    // 可以換成自己的網址，或是設置為 * 來允許所有網址
+    origin: [
+      'https://jiahongl.github.io',
+      'http://localhost:4200',
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'http://localhost:8080',
+    ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type, Accept, Authorization',
+  }); // 啟用跨域請求
   setupSwagger(app);
   await app.listen(3000);
 }
