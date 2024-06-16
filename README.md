@@ -17,7 +17,7 @@ $ npm run start:dev
 | -------- | -------- | -------- | -------- |
 | Angular     | [Angular 12 Refresh Token with Interceptor and JWT example](https://www.bezkoder.com/angular-12-refresh-token/)  | [JiaHongL/ng-refresh-token-demo](https://github.com/JiaHongL/ng-refresh-token-demo)  | [Demo](https://jiahongl.github.io/ng-refresh-token-demo/#/login) |
 | React + Redux Toolkit | [React.js + Redux Toolkit: Refresh Tokens Authentication](https://codevoweb.com/react-redux-toolkit-refresh-token-authentication/)| [JiaHongL/react-refresh-token-demo](https://github.com/JiaHongL/react-refresh-token-demo) |  [Demo](https://jiahongl.github.io/react-refresh-token-demo/#/login) |
-| Vue | ChatGPT 範例 | [JiaHongL/vue-refresh-token-demo](https://github.com/JiaHongL/vue-refresh-token-demo) |  [Demo](https://jiahongl.github.io/vue-refresh-token-demo/#/login) |
+| Vue + Axios | ChatGPT 範例 | [JiaHongL/vue-refresh-token-demo](https://github.com/JiaHongL/vue-refresh-token-demo) |  [Demo](https://jiahongl.github.io/vue-refresh-token-demo/#/login) |
 
 > 歡迎實作其他版本，可發 PR 或是 issue 都可:")
 
