@@ -2,6 +2,15 @@
 
 這是一個可以拿來練習前端 jwt refresh token 的後端專案。
 
+## 下載與啟動專案
+
+```bash
+$ git clone https://github.com/JiaHongL/jwt-refresh-token-mock-backend.git
+$ cd jwt-refresh-token-mock-backend
+$ npm install
+$ npm run start:dev
+```
+
 ## 推薦文章與參考範例
 
 | 框架 | 推薦文章 | 相關範例/實作練習 | demo |
@@ -11,15 +20,6 @@
 | Vue | ChatGPT 範例 | [JiaHongL/vue-refresh-token-demo](https://github.com/JiaHongL/vue-refresh-token-demo) |  [Demo](https://jiahongl.github.io/vue-refresh-token-demo/#/login) |
 
 > 歡迎實作其他版本，可發 PR 或是 issue 都可:")
-
-## 下載與啟動專案
-
-```bash
-$ git clone https://github.com/JiaHongL/jwt-refresh-token-mock-backend.git
-$ cd jwt-refresh-token-mock-backend
-$ npm install
-$ npm run start:dev
-```
 
 ## Swagger 快速介紹
 
