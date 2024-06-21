@@ -2,6 +2,8 @@
 
 這是一個可以拿來練習前端 jwt refresh token 的後端專案。
 
+[投影片介紹](https://www.canva.com/design/DAFQV4ZN49k/HbuvuwjiSCYkeJilmZJXag/view?utm_content=DAFQV4ZN49k&utm_campaign=designshare&utm_medium=link&utm_source=homepage_design_menu)
+
 ## 下載與啟動專案
 
 ```bash
